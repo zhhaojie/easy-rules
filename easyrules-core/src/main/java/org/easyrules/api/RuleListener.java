@@ -3,9 +3,17 @@ package org.easyrules.api;
 /**
  * A listener for rules execution events.
  *
- * @author Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public interface RuleListener {
+
+    /**
+     * Triggered before the evaluation of a rule.
+     *
+     * @param rule being evaluated
+     * @return true if the rule should be evaluated, false otherwise
+     */
+    boolean beforeEvaluate(Rule rule);
 
     /**
      * Triggered before the execution of a rule.

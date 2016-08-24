@@ -9,6 +9,7 @@ import org.easyrules.util.Utils;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,44 +30,49 @@ class RuleProxy implements InvocationHandler {
      * @return a proxy that implements the {@link org.easyrules.api.Rule} interface.
      */
     public static org.easyrules.api.Rule asRule(final Object rule) {
-
-        ruleDefinitionValidator.validateRuleDefinition(rule);
-
-        return (org.easyrules.api.Rule) Proxy.newProxyInstance(
-                org.easyrules.api.Rule.class.getClassLoader(),
-                new Class[]{org.easyrules.api.Rule.class, Comparable.class},
-                new RuleProxy(rule));
+        org.easyrules.api.Rule result;
+        if (Utils.getInterfaces(rule).contains(org.easyrules.api.Rule.class)) {
+            result = (org.easyrules.api.Rule) rule;
+        } else {
+            ruleDefinitionValidator.validateRuleDefinition(rule);
+            result = (org.easyrules.api.Rule) Proxy.newProxyInstance(
+                    org.easyrules.api.Rule.class.getClassLoader(),
+                    new Class[]{org.easyrules.api.Rule.class, Comparable.class},
+                    new RuleProxy(rule));
+        }
+        return result;
     }
 
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        if (method.getName().equals("getName")) {
-            return getRuleAnnotation().name();
+        String methodName = method.getName();
+        if (methodName.equals("getName")) {
+            return getRuleName();
         }
-        if (method.getName().equals("getDescription")) {
-            return getRuleAnnotation().description();
+        if (methodName.equals("getDescription")) {
+            return getRuleDescription();
         }
-        if (method.getName().equals("getPriority")) {
-            return getPriority();
+        if (methodName.equals("getPriority")) {
+            return getRulePriority();
         }
-        if (method.getName().equals("evaluate")) {
+        if (methodName.equals("evaluate")) {
             return getConditionMethod().invoke(target, args); // validated upfront
         }
-        if (method.getName().equals("execute")) {
+        if (methodName.equals("execute")) {
             for (ActionMethodOrderBean actionMethodBean : getActionMethodBeans()) {
                 actionMethodBean.getMethod().invoke(target);
             }
         }
-        if (method.getName().equals("equals")) {
+        if (methodName.equals("equals")) {
             return target.equals(args[0]);
         }
-        if (method.getName().equals("hashCode")) {
+        if (methodName.equals("hashCode")) {
             return target.hashCode();
         }
-        if (method.getName().equals("toString")) {
+        if (methodName.equals("toString")) {
             return target.toString();
         }
-        if (method.getName().equals("compareTo")) {
+        if (methodName.equals("compareTo")) {
             Method compareToMethod = getCompareToMethod();
             if (compareToMethod != null) {
                 return compareToMethod.invoke(target, args);
@@ -81,8 +87,8 @@ class RuleProxy implements InvocationHandler {
     private int compareTo(final org.easyrules.api.Rule otherRule) throws Exception {
         String otherName = otherRule.getName();
         int otherPriority = otherRule.getPriority();
-        String name = getRuleAnnotation().name();
-        int priority = getPriority();
+        String name = getRuleName();
+        int priority = getRulePriority();
 
         if (priority < otherPriority) {
             return -1;
@@ -93,7 +99,7 @@ class RuleProxy implements InvocationHandler {
         }
     }
 
-    private int getPriority() throws Exception {
+    private int getRulePriority() throws Exception {
         int priority = Utils.DEFAULT_RULE_PRIORITY;
 
         Method[] methods = getMethods();
@@ -118,7 +124,7 @@ class RuleProxy implements InvocationHandler {
 
     private Set<ActionMethodOrderBean> getActionMethodBeans() {
         Method[] methods = getMethods();
-        Set<ActionMethodOrderBean> actionMethodBeans = new TreeSet<ActionMethodOrderBean>();
+        Set<ActionMethodOrderBean> actionMethodBeans = new TreeSet<>();
         for (Method method : methods) {
             if (method.isAnnotationPresent(Action.class)) {
                 Action actionAnnotation = method.getAnnotation(Action.class);
@@ -140,11 +146,49 @@ class RuleProxy implements InvocationHandler {
     }
 
     private Method[] getMethods() {
-        return target.getClass().getMethods();
+        return getTargetClass().getMethods();
     }
 
     private Rule getRuleAnnotation() {
-        return target.getClass().getAnnotation(Rule.class);
+        return Utils.findAnnotation(Rule.class, getTargetClass());
+    }
+
+    private String getRuleName() {
+        Rule rule = getRuleAnnotation();
+        return rule.name().equals(Utils.DEFAULT_RULE_NAME) ? getTargetClass().getSimpleName() : rule.name();
+    }
+
+    private String getRuleDescription() {
+        // Default description = "when " + conditionMethodName + " then " + comma separated actionMethodsNames
+        StringBuilder description = new StringBuilder();
+        appendConditionMethodName(description);
+        appendActionMethodsNames(description);
+
+        Rule rule = getRuleAnnotation();
+        return rule.description().equals(Utils.DEFAULT_RULE_DESCRIPTION) ? description.toString() : rule.description();
+    }
+
+    private void appendConditionMethodName(StringBuilder description) {
+        Method method = getConditionMethod();
+        if (method != null) {
+            description.append("when ");
+            description.append(method.getName());
+            description.append(" then ");
+        }
+    }
+
+    private void appendActionMethodsNames(StringBuilder description) {
+        Iterator<ActionMethodOrderBean> iterator = getActionMethodBeans().iterator();
+        while (iterator.hasNext()) {
+            description.append(iterator.next().getMethod().getName());
+            if (iterator.hasNext()) {
+                description.append(",");
+            }
+        }
+    }
+
+    private Class<?> getTargetClass() {
+        return target.getClass();
     }
 
 }

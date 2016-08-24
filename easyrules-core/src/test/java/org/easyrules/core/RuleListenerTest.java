@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2014, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2014, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.*;
 /**
  * Test class of the execution of rule listeners.
  *
- * @author Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RuleListenerTest {
@@ -57,6 +57,8 @@ public class RuleListenerTest {
         when(rule.getName()).thenReturn("r");
         when(rule.getPriority()).thenReturn(1);
         when(rule.evaluate()).thenReturn(true);
+        when(ruleListener1.beforeEvaluate(rule)).thenReturn(true);
+        when(ruleListener2.beforeEvaluate(rule)).thenReturn(true);
 
         rulesEngine = aNewRulesEngine()
                 .withRuleListener(ruleListener1)
@@ -95,6 +97,40 @@ public class RuleListenerTest {
         inOrder.verify(ruleListener1).onFailure(rule, exception);
         inOrder.verify(ruleListener2).onFailure(rule, exception);
 
+    }
+
+    @Test
+    public void whenListenerReturnsFalse_thenTheRuleShouldBeSkippedBeforeBeingEvaluated() throws Exception {
+
+        // Given
+        when(ruleListener1.beforeEvaluate(rule)).thenReturn(false);
+        rulesEngine = aNewRulesEngine()
+                .withRuleListener(ruleListener1)
+                .build();
+
+        // When
+        rulesEngine.registerRule(rule);
+        rulesEngine.fireRules();
+
+        // Then
+        verify(rule, never()).evaluate();
+    }
+
+    @Test
+    public void whenListenerReturnsTrue_thenTheRuleShouldBeEvaluated() throws Exception {
+
+        // Given
+        when(ruleListener1.beforeEvaluate(rule)).thenReturn(true);
+        rulesEngine = aNewRulesEngine()
+                .withRuleListener(ruleListener1)
+                .build();
+
+        // When
+        rulesEngine.registerRule(rule);
+        rulesEngine.fireRules();
+
+        // Then
+        verify(rule).evaluate();
     }
 
 }

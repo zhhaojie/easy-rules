@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2015, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -31,16 +31,19 @@ import org.springframework.beans.factory.FactoryBean;
 import java.util.List;
 
 import static org.easyrules.core.RulesEngineBuilder.aNewRulesEngine;
+import static org.easyrules.util.Utils.DEFAULT_ENGINE_NAME;
 import static org.easyrules.util.Utils.DEFAULT_RULE_PRIORITY_THRESHOLD;
 
 /**
  * Factory bean to create {@link RulesEngine} instances.
  *
- * @author Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
 
-    private int rulePriorityThreshold = DEFAULT_RULE_PRIORITY_THRESHOLD;
+    private String name = DEFAULT_ENGINE_NAME;
+
+    private int priorityThreshold = DEFAULT_RULE_PRIORITY_THRESHOLD;
     
     private boolean skipOnFirstAppliedRule;
     
@@ -55,13 +58,14 @@ public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
     @Override
     public RulesEngine getObject() {
         RulesEngineBuilder rulesEngineBuilder = aNewRulesEngine()
+                .named(name)
                 .withSkipOnFirstAppliedRule(skipOnFirstAppliedRule)
                 .withSkipOnFirstFailedRule(skipOnFirstFailedRule)
-                .withRulePriorityThreshold(rulePriorityThreshold)
+                .withRulePriorityThreshold(priorityThreshold)
                 .withSilentMode(silentMode);
         registerRuleListeners(rulesEngineBuilder);
         RulesEngine rulesEngine = rulesEngineBuilder.build();
-        registerRules(rules, rulesEngine);
+        registerRules(rulesEngine);
         return rulesEngine;
     }
 
@@ -75,7 +79,7 @@ public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
         return false;
     }
 
-    private void registerRules(List<Object> rules, RulesEngine rulesEngine) {
+    private void registerRules(RulesEngine rulesEngine) {
         if (rules != null && !rules.isEmpty()) {
             for (Object rule : rules) {
                 rulesEngine.registerRule(rule);
@@ -103,8 +107,8 @@ public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
         this.rules = rules;
     }
 
-    public void setRulePriorityThreshold(int rulePriorityThreshold) {
-        this.rulePriorityThreshold = rulePriorityThreshold;
+    public void setPriorityThreshold(int priorityThreshold) {
+        this.priorityThreshold = priorityThreshold;
     }
 
     public void setSilentMode(boolean silentMode) {
@@ -117,5 +121,9 @@ public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
 
     public void setSkipOnFirstFailedRule(boolean skipOnFirstFailedRule) {
         this.skipOnFirstFailedRule = skipOnFirstFailedRule;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

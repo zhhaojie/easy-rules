@@ -10,12 +10,11 @@
 
     <groupId>org.easyrules</groupId>
     <artifactId>easyrules</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
 
     <modules>
         <module>easyrules-archetype</module>
         <module>easyrules-core</module>
-        <module>easyrules-samples</module>
         <module>easyrules-jmx</module>
         <module>easyrules-quartz</module>
         <module>easyrules-spring</module>
@@ -24,51 +23,50 @@
     <packaging>pom</packaging>
 
     <name>Easy Rules</name>
-    <description>Easy Rules is a simple yet powerful Java rules engine</description>
+    <description>Easy Rules is a simple, stupid Java rules engine</description>
     <url>http://www.easyrules.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.7</java.version>
         <junit.version>4.12</junit.version>
-        <assertj.version>1.7.1</assertj.version>
+        <assertj.version>2.2.0</assertj.version>
         <mockito.version>1.10.19</mockito.version>
-        <quartz.version>2.2.1</quartz.version>
-        <spring.version>3.2.13.RELEASE</spring.version>
-        <maven-checkstyle-plugin.version>2.15</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.4</maven-pmd-plugin.version>
-        <findbugs-maven-plugin.version>3.0.1</findbugs-maven-plugin.version>
-        <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-        <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
-        <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+        <quartz.version>2.2.2</quartz.version>
+        <spring.version>4.2.3.RELEASE</spring.version>
+        <maven-cobertura-plugin.version>2.7</maven-cobertura-plugin.version>
+        <maven-coveralls-plugin.version>4.2.0</maven-coveralls-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
     </properties>
 
     <scm>
-        <url>git@github.com:benas/easy-rules.git</url>
-        <connection>scm:git:git@github.com:benas/easy-rules.git</connection>
-        <developerConnection>scm:git:git@github.com:benas/easy-rules.git</developerConnection>
+        <url>git@github.com:EasyRules/easyrules.git</url>
+        <connection>scm:git:git@github.com:EasyRules/easyrules.git</connection>
+        <developerConnection>scm:git:git@github.com:EasyRules/easyrules.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/benas/easy-rules/issues</url>
+        <url>https://github.com/EasyRules/easyrules/issues</url>
     </issueManagement>
 
     <ciManagement>
-        <system>Jenkins</system>
-        <url>https://buildhive.cloudbees.com/job/benas/job/easy-rules/</url>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/EasyRules/easyrules</url>
     </ciManagement>
 
     <developers>
         <developer>
             <id>benas</id>
             <name>Mahmoud Ben Hassine</name>
-            <url>http://www.mahmoud-benhassine.fr</url>
-            <email>mahmoud@benhassine.fr</email>
+            <url>http://benas.github.io</url>
+            <email>mahmoud.benhassine@icloud.com</email>
             <roles>
-                <role>Project founder</role>
+                <role>Lead developer</role>
             </roles>
         </developer>
     </developers>
@@ -143,10 +141,25 @@
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <verbose>true</verbose>
-                        <source>1.6</source>
-                        <target>1.6</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                         <showWarnings>true</showWarnings>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>cobertura-maven-plugin</artifactId>
+                    <version>${maven-cobertura-plugin.version}</version>
+                    <configuration>
+                        <format>xml</format>
+                        <maxmem>256m</maxmem>
+                        <aggregate>true</aggregate>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>${maven-coveralls-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

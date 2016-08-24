@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2015, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,15 @@ package org.easyrules.core;
 
 import org.easyrules.api.JmxRule;
 
+import javax.management.MXBean;
+
 /**
  * An extension of {@link org.easyrules.core.BasicRule} that is supported by JMX.
  * 
  * @author Drem Darios (drem.darios@gmail.com)
  */
+@Deprecated
+@MXBean
 public class BasicJmxRule extends BasicRule implements JmxRule {
 
 }

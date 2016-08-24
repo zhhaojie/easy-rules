@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2015, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,12 @@ package org.easyrules.core;
 import org.easyrules.api.Rule;
 import org.easyrules.util.Utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static org.easyrules.core.RuleProxy.asRule;
 
 /**
  * Class representing a composite rule composed of a set of rules.
@@ -36,7 +40,7 @@ import java.util.TreeSet;
  * A composite rule is triggered if <strong>ALL</strong> conditions of its composing rules are satisfied.
  * When a composite rule is applied, actions of <strong>ALL</strong> composing rules are performed.
  *
- * @author Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public class CompositeRule extends BasicRule {
 
@@ -44,6 +48,8 @@ public class CompositeRule extends BasicRule {
      * The set of composing rules.
      */
     protected Set<Rule> rules;
+
+    protected Map<Object, Rule> proxyRules;
 
     public CompositeRule() {
         this(Utils.DEFAULT_RULE_NAME, Utils.DEFAULT_RULE_DESCRIPTION, Utils.DEFAULT_RULE_PRIORITY);
@@ -59,7 +65,8 @@ public class CompositeRule extends BasicRule {
 
     public CompositeRule(final String name, final String description, final int priority) {
         super(name, description, priority);
-        rules = new TreeSet<Rule>();
+        rules = new TreeSet<>();
+        proxyRules = new HashMap<>();
     }
 
     /**
@@ -96,16 +103,21 @@ public class CompositeRule extends BasicRule {
      * Add a rule to the composite rule.
      * @param rule the rule to add
      */
-    public void addRule(final Rule rule) {
-        rules.add(rule);
+    public void addRule(final Object rule) {
+        Rule proxy = asRule(rule);
+        rules.add(proxy);
+        proxyRules.put(rule, proxy);
     }
 
     /**
      * Remove a rule from the composite rule.
      * @param rule the rule to remove
      */
-    public void removeRule(final Rule rule) {
-        rules.remove(rule);
+    public void removeRule(final Object rule) {
+        Rule proxy = proxyRules.get(rule);
+        if (proxy != null) {
+            rules.remove(proxy);
+        }
     }
 
 }

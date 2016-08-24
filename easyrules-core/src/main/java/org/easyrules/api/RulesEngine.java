@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2015, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -24,36 +24,63 @@
 
 package org.easyrules.api;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.easyrules.core.RulesEngineParameters;
+
 /**
  * Rules engine interface.
  *
- * @author Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public interface RulesEngine {
 
     /**
-     * Return the rules engine name.
+     * Return the rules engine parameters.
      *
-     * @return The rule engine name
+     * @return The rules engine parameters
      */
-    String getName();
+    RulesEngineParameters getParameters();
 
     /**
      * Register a rule in the rules engine registry.
+     *
      * @param rule the rule to register
      */
     void registerRule(Object rule);
 
     /**
      * Unregister a rule from the rules engine registry.
+     *
      * @param rule the rule to unregister
      */
     void unregisterRule(Object rule);
 
     /**
+     * Return the set of registered rules.
+     *
+     * @return the set of registered rules
+     */
+    Set<Rule> getRules();
+
+    /**
+     * Return the list of registered rule listeners.
+     *
+     * @return the list of registered rule listeners
+     */
+    List<RuleListener> getRuleListeners();
+
+    /**
      * Fire all registered rules.
      */
     void fireRules();
+
+    /**
+     * Check rules without firing them.
+     * @return a map with the result of evaluation of each rule
+     */
+    Map<Rule, Boolean> checkRules();
 
     /**
      * Clear rules engine registry.

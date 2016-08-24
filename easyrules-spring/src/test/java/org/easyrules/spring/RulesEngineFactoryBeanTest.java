@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2015, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ package org.easyrules.spring;
 import org.easyrules.api.RuleListener;
 import org.easyrules.api.RulesEngine;
 import org.easyrules.core.BasicRule;
+import org.easyrules.core.RulesEngineParameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,11 +44,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test class for {@link RulesEngineFactoryBean}.
  *
- * @author Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RulesEngineFactoryBeanTest {
 
+    public static final String NAME = "myRulesEngine";
     public static final int RULE_PRIORITY_THRESHOLD = 10;
 
     @Mock
@@ -54,37 +58,52 @@ public class RulesEngineFactoryBeanTest {
     @Mock
     private RuleListener ruleListener;
 
-    private int rulePriorityThreshold;
+    private String name;
+
+    private int priorityThreshold;
 
     private boolean skipOnFirstAppliedRule;
 
     private boolean skipOnFirstFailedRule;
-    
+
     private boolean silentMode;
-    
+
     private RulesEngineFactoryBean rulesEngineFactoryBean;
 
     @Before
     public void setUp() {
+        name = NAME;
         silentMode = true;
         skipOnFirstFailedRule = true;
         skipOnFirstAppliedRule = true;
-        rulePriorityThreshold = RULE_PRIORITY_THRESHOLD;
+        priorityThreshold = RULE_PRIORITY_THRESHOLD;
         rulesEngineFactoryBean = new RulesEngineFactoryBean();
     }
 
+    @SuppressWarnings({"AssertEqualsBetweenInconvertibleTypes", "unchecked"})
     @Test
     public void getObject() {
-        rulesEngineFactoryBean.setRules(Collections.<Object>singletonList(rule));
-        rulesEngineFactoryBean.setRuleListeners(singletonList(ruleListener));
-        rulesEngineFactoryBean.setRulePriorityThreshold(rulePriorityThreshold);
+        List<Object> expectedRules = Collections.<Object>singletonList(rule);
+        List<RuleListener> expectedRuleListeners = singletonList(ruleListener);
+
+        rulesEngineFactoryBean.setRules(expectedRules);
+        rulesEngineFactoryBean.setRuleListeners(expectedRuleListeners);
+        rulesEngineFactoryBean.setPriorityThreshold(priorityThreshold);
         rulesEngineFactoryBean.setSkipOnFirstAppliedRule(skipOnFirstAppliedRule);
         rulesEngineFactoryBean.setSkipOnFirstFailedRule(skipOnFirstFailedRule);
         rulesEngineFactoryBean.setSilentMode(silentMode);
+        rulesEngineFactoryBean.setName(name);
         RulesEngine rulesEngine = rulesEngineFactoryBean.getObject();
 
         assertThat(rulesEngine).isNotNull();
-        // TODO assert using reflection that fields are correctly injected
+
+        RulesEngineParameters rulesEngineParameters = rulesEngine.getParameters();
+        assertThat(rulesEngineParameters.getName()).isEqualTo(NAME);
+        assertThat(rulesEngineParameters.getPriorityThreshold()).isEqualTo(RULE_PRIORITY_THRESHOLD);
+        assertThat(rulesEngineParameters.isSkipOnFirstAppliedRule()).isTrue();
+        assertThat(rulesEngineParameters.isSkipOnFirstFailedRule()).isTrue();
+        assertThat(rulesEngine.getRules()).isEqualTo(new HashSet<>(expectedRules));
+        assertThat(rulesEngine.getRuleListeners()).isEqualTo(expectedRuleListeners);
     }
 
     @Test

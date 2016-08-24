@@ -1,9 +1,12 @@
 package org.easyrules.util;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -13,9 +16,11 @@ import static java.util.Arrays.asList;
 /**
  * Utilities class.
  *
- * @author Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public final class Utils {
+
+    private static final Logger LOGGER = Logger.getLogger(Utils.class.getName());
 
     /**
      * Default rule name.
@@ -42,6 +47,17 @@ public final class Utils {
      */
     public static final int DEFAULT_RULE_PRIORITY_THRESHOLD = Integer.MAX_VALUE;
 
+    static {
+        try {
+            if (System.getProperty("java.util.logging.config.file") == null &&
+                    System.getProperty("java.util.logging.config.class") == null) {
+                LogManager.getLogManager().readConfiguration(Utils.class.getResourceAsStream("/logging.properties"));
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Unable to load logging configuration file", e);
+        }
+    }
+
     private Utils() {
 
     }
@@ -65,13 +81,39 @@ public final class Utils {
     }
 
     public static List<Class> getInterfaces(final Object rule) {
-        List<Class> interfaces = new ArrayList<Class>();
+        List<Class> interfaces = new ArrayList<>();
         Class clazz = rule.getClass();
         while (clazz.getSuperclass() != null) {
             interfaces.addAll(asList(clazz.getInterfaces()));
             clazz = clazz.getSuperclass();
         }
         return interfaces;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A extends Annotation> A findAnnotation(
+            final Class<? extends Annotation> targetAnnotation, final Class annotatedType) {
+
+        checkNotNull(targetAnnotation, "targetAnnotation");
+        checkNotNull(annotatedType, "annotatedType");
+
+        Annotation foundAnnotation = annotatedType.getAnnotation(targetAnnotation);
+        if (foundAnnotation == null) {
+            for (Annotation annotation : annotatedType.getAnnotations()) {
+                Class<? extends Annotation> annotationType = annotation.annotationType();
+                if (annotationType.isAnnotationPresent(targetAnnotation)) {
+                    foundAnnotation = annotationType.getAnnotation(targetAnnotation);
+                    break;
+                }
+            }
+        }
+        return (A) foundAnnotation;
+    }
+
+    public static boolean isAnnotationPresent(
+            final Class<? extends Annotation> targetAnnotation, final Class annotatedType) {
+
+        return findAnnotation(targetAnnotation, annotatedType) != null;
     }
 
     public static void checkNotNull(final Object argument, final String argumentName) {

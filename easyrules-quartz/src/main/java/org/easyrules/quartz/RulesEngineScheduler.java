@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2015, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Quartz scheduler wrapper used to setup triggers.
- * <p/>
+ *
  * Created by Sunand on 6/8/2015.
  */
 public class RulesEngineScheduler {
@@ -91,12 +91,13 @@ public class RulesEngineScheduler {
      *
      * @param engine    the engine to schedule
      * @param startTime the start time
+     * @throws RulesEngineSchedulerException if unable to schedule the rules engine
      */
     public void scheduleAt(final RulesEngine engine, final Date startTime) throws RulesEngineSchedulerException {
         checkNotNull(engine, "engine");
         checkNotNull(startTime, "startTime");
 
-        String engineName = engine.getName();
+        String engineName = engine.getParameters().getName();
         String jobName = JOB_NAME_PREFIX + engineName;
         String triggerName = TRIGGER_NAME_PREFIX + engineName;
 
@@ -122,12 +123,13 @@ public class RulesEngineScheduler {
      * @param engine    the engine to schedule
      * @param startTime the start time
      * @param interval  the repeat interval in seconds
+     * @throws RulesEngineSchedulerException if unable to schedule the rules engine
      */
     public void scheduleAtWithInterval(final RulesEngine engine, final Date startTime, final int interval) throws RulesEngineSchedulerException {
         checkNotNull(engine, "engine");
         checkNotNull(startTime, "startTime");
 
-        String engineName = engine.getName();
+        String engineName = engine.getParameters().getName();
         String jobName = JOB_NAME_PREFIX + engineName;
         String triggerName = TRIGGER_NAME_PREFIX + engineName;
 
@@ -159,12 +161,13 @@ public class RulesEngineScheduler {
      * @param cronExpression the cron expression to use.
      *                       For a complete tutorial about cron expressions, please refer to
      *                       <a href="http://quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger">quartz reference documentation</a>.
+     * @throws RulesEngineSchedulerException if unable to schedule the rules engine
      */
     public void scheduleCron(final RulesEngine engine, final String cronExpression) throws RulesEngineSchedulerException {
         checkNotNull(engine, "engine");
         checkNotNull(cronExpression, "cronExpression");
 
-        String engineName = engine.getName();
+        String engineName = engine.getParameters().getName();
         String jobName = JOB_NAME_PREFIX + engineName;
         String triggerName = TRIGGER_NAME_PREFIX + engineName;
 
@@ -193,7 +196,7 @@ public class RulesEngineScheduler {
     public void unschedule(final RulesEngine engine) throws RulesEngineSchedulerException {
         LOGGER.log(Level.INFO, "Unscheduling engine ''{0}'' ", engine);
         try {
-            scheduler.unscheduleJob(TriggerKey.triggerKey(TRIGGER_NAME_PREFIX + engine.getName()));
+            scheduler.unscheduleJob(TriggerKey.triggerKey(TRIGGER_NAME_PREFIX + engine.getParameters().getName()));
         } catch (SchedulerException e) {
             throw new RulesEngineSchedulerException("Unable to unschedule engine " + engine, e);
         }
@@ -208,7 +211,7 @@ public class RulesEngineScheduler {
      */
     public boolean isScheduled(final RulesEngine engine) throws RulesEngineSchedulerException {
         try {
-            return scheduler.checkExists(TriggerKey.triggerKey(TRIGGER_NAME_PREFIX + engine.getName()));
+            return scheduler.checkExists(TriggerKey.triggerKey(TRIGGER_NAME_PREFIX + engine.getParameters().getName()));
         } catch (SchedulerException e) {
             throw new RulesEngineSchedulerException("Unable to check if the engine '" + engine + "' is scheduled", e);
         }
@@ -230,7 +233,7 @@ public class RulesEngineScheduler {
 
     /**
      * Stop the scheduler.
-     * <p/>
+     *
      * <strong>Note: The scheduler cannot be re-started and no more engines can be scheduled.</strong>
      *
      * @throws RulesEngineSchedulerException thrown if the scheduler cannot be stopped
@@ -246,6 +249,7 @@ public class RulesEngineScheduler {
     /**
      * Check if the scheduler is started.
      *
+     * @return true if the scheduler is started, false else
      * @throws RulesEngineSchedulerException thrown if the scheduler status cannot be checked
      */
     public boolean isStarted() throws RulesEngineSchedulerException {
@@ -259,6 +263,7 @@ public class RulesEngineScheduler {
     /**
      * Check if the scheduler is stopped.
      *
+     * @return true if the scheduler is stopped, false else
      * @throws RulesEngineSchedulerException thrown if the scheduler status cannot be checked
      */
     public boolean isStopped() throws RulesEngineSchedulerException {

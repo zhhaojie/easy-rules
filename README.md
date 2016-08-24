@@ -1,6 +1,12 @@
 ## What is Easy Rules?
 
-Easy Rules is a simple yet powerful Java rules engine providing the following features:
+Easy Rules is a Java rules engine inspired by an article called *"[Should I use a Rules Engine?](http://martinfowler.com/bliki/RulesEngine.html)"* by [Martin Fowler](http://martinfowler.com/) in which he says:
+
+> You can build a simple rules engine yourself. All you need is to create a bunch of objects with conditions and actions, store them in a collection, and run through them to evaluate the conditions and execute the actions.
+
+This is exactly what Easy Rules does, it provides the `Rule` abstraction to create rules with conditions and actions, and the `RulesEngine` API that runs through a set of rules to evaluate conditions and execute actions.
+
+## Core features
 
  * Lightweight library and easy to learn API
 
@@ -12,43 +18,38 @@ Easy Rules is a simple yet powerful Java rules engine providing the following fe
 
  * Dynamic rule configuration at runtime using JMX
 
-## Documentation
+## Quick links
 
-The online documentation can be found here : [http://www.easyrules.org](http://www.easyrules.org)
-
-## Presentation
-
-You can find some slides about Easy Rules on [speaker deck](https://speakerdeck.com/benas/easy-rules).
-
-## Continuous integration
-[Jenkins job @ CloudBees.com](https://buildhive.cloudbees.com/job/benas/job/easy-rules/)
+|Item                  |Link                                                                                  |
+|:---------------------|:-------------------------------------------------------------------------------------|
+|Project Home          | [http://www.easyrules.org](http://www.easyrules.org)                                 |
+|Presentation          | [https://speakerdeck.com/benas/easy-rules](https://speakerdeck.com/benas/easy-rules) |
+|Continuous integration| [Build job @ Travis CI](https://travis-ci.org/EasyRules/easyrules)                   |
+|Agile Board           | [Backlog items @ waffle.io](https://waffle.io/EasyRules/easyrules)                   |
+|Code coverage         | [![Coverage](https://coveralls.io/repos/EasyRules/easyrules/badge.svg?style=flat&branch=master&service=github)](https://coveralls.io/github/EasyRules/easyrules?branch=master) |
+|Dependencies          | [![Dependency Status](https://www.versioneye.com/user/projects/5666159cc3686e000b000923/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5666159cc3686e000b000923) |
 
 ## Current version
 
-* The current stable version is 2.1.0: [![Build Status](https://buildhive.cloudbees.com/job/benas/job/easy-rules/badge/icon)](https://buildhive.cloudbees.com/job/benas/job/easy-rules/)
-* The current development version is 2.1.1-SNAPSHOT. In order to use snapshot versions, you need to add the following maven repository in your `pom.xml`:
+* The current stable version is `2.3.0` : [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.easyrules/easyrules-core/badge.svg?style=flat)](http://search.maven.org/#artifactdetails|org.easyrules|easyrules-core|2.3.0|)
+* The current development version is `2.4.0-SNAPSHOT` : [![Build Status](https://travis-ci.org/EasyRules/easyrules.svg?branch=master)](https://travis-ci.org/EasyRules/easyrules)
+
+In order to use snapshot versions, you need to add the following maven repository in your `pom.xml`:
 
 ```xml
-<repositories>
-    <repository>
-        <id>ossrh</id>
-        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-</repositories>
+<repository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+</repository>
 ```
-
-## Agile Board
-[Backlog items @ Waffle.io](https://waffle.io/benas/easy-rules)
 
 ## Contribution
 
 You are welcome to contribute to the project with pull requests on GitHub.
 
-If you believe you found a bug, please use the [issue tracker](https://github.com/benas/easy-rules/issues). 
-It would be great to attach a JUnit test that fails with the current version.
-And you would be an awesome contributor if you send a pull request with a patch that fixes the bug!
+If you found a bug or want to request a feature, please use the [issue tracker](https://github.com/EasyRules/easyrules/issues).
 
-For any further question, you can use the [Gitter](https://gitter.im/benas/easy-rules) channel of the project: [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/benas/easy-rules?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+For any further question, you can use the [Gitter](https://gitter.im/EasyRules/easyrules) channel of the project.
 
 ## Awesome contributors
 
@@ -60,28 +61,20 @@ For any further question, you can use the [Gitter](https://gitter.im/benas/easy-
 
 Thank you all for your contributions!
 
-## Credits
+## Acknowledgments
 
-### Yourkit
-
-Many thanks to [YourKit, LLC](https://www.yourkit.com/) for providing a free license of [YourKit Java Profiler](https://www.yourkit.com/java/profiler/index.jsp) to kindly support the development of Easy Rules.
-
-![YourKit Java Profiler](https://www.yourkit.com/images/yklogo.png)
-
-### CloudBees
-
-Many thanks to [CloudBees](https://www.cloudbees.com/) for providing a free [Jenkins](http://jenkins-ci.org/) service to support continuous integration for open source projects.
-
-![CloudBees](https://www.cloudbees.com/sites/default/files/styles/large/public/Button-Powered-by-CB.png)
-
+|YourKit|Travis CI|
+|:-:|:-:|
+|![YourKit Java Profiler](https://www.yourkit.com/images/yklogo.png)|![Travis CI](https://camo.githubusercontent.com/7f5c56c37cbcd3d7b0cbd7b4c32dd2830eea22e8/68747470733a2f2f63646e2e7472617669732d63692e636f6d2f696d616765732f6c6f676f732f54726176697343492d46756c6c2d436f6c6f722d37663564623039343935633862303963323163623637386334646531386432312e706e67)|
+|Many thanks to [YourKit, LLC](https://www.yourkit.com/) for providing a free license of [YourKit Java Profiler](https://www.yourkit.com/java/profiler/index.jsp) to kindly support the development of Easy Rules.|Many thanks to [Travis CI](https://travis-ci.org) for providing a free continuous integration service for open source projects.|
 
 ## License
-Easy Rules is released under the [MIT License](http://opensource.org/licenses/mit-license.php/):
+Easy Rules is released under the [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](http://opensource.org/licenses/MIT).
 
 ```
 The MIT License (MIT)
 
-Copyright (c) 2015 Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+Copyright (c) 2016 Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

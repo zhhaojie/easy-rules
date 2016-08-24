@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- *  Copyright (c) 2015, Mahmoud Ben Hassine (mahmoud@benhassine.fr)
+ *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Default {@link JmxRulesEngine} implementation.
- * <p/>
+ *
  * This implementation handles a set of JMX rules with unique names.
  *
  * @author Drem Darios (drem.darios@gmail.com)
@@ -40,9 +40,8 @@ class DefaultJmxRulesEngine extends DefaultRulesEngine implements JmxRulesEngine
 
     private MBeanManager beanManager = new MBeanManager();
 
-    DefaultJmxRulesEngine(String name, boolean skipOnFirstAppliedRule, boolean skipOnFirstFailedRule,
-                          int rulePriorityThreshold, List<RuleListener> ruleListeners, boolean silentMode) {
-        super(name, skipOnFirstAppliedRule, skipOnFirstFailedRule, rulePriorityThreshold, ruleListeners, silentMode);
+    DefaultJmxRulesEngine(RulesEngineParameters parameters, List<RuleListener> ruleListeners) {
+        super(parameters, ruleListeners);
     }
 
     @Override
