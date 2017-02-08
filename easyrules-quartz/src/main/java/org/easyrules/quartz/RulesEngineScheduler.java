@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.quartz;
 
 import org.easyrules.api.RulesEngine;
@@ -33,7 +32,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.easyrules.util.Utils.checkNotNull;
+import static java.lang.String.format;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
@@ -278,6 +277,12 @@ public class RulesEngineScheduler {
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put("engine", engine);
         return newJob(RulesEngineJob.class).withIdentity(jobName).usingJobData(jobDataMap).build();
+    }
+
+    private static void checkNotNull(final Object argument, final String argumentName) {
+        if (argument == null) {
+            throw new IllegalArgumentException(format("The %s must not be null", argumentName));
+        }
     }
 
 }

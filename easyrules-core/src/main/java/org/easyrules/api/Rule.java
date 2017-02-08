@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.api;
-
 
 /**
  * Abstraction for a rule that can be fired by the rules engine.
@@ -33,6 +31,21 @@ package org.easyrules.api;
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public interface Rule {
+
+    /**
+     * Default rule name.
+     */
+    String DEFAULT_NAME = "rule";
+
+    /**
+     * Default rule description.
+     */
+    String DEFAULT_DESCRIPTION = "description";
+
+    /**
+     * Default rule priority.
+     */
+    int DEFAULT_PRIORITY = Integer.MAX_VALUE - 1;
 
     /**
      * Getter for rule name.

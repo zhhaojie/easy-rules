@@ -1,3 +1,26 @@
+/**
+ * The MIT License
+ *
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
 package org.easyrules.core;
 
 import org.easyrules.annotation.Action;
@@ -8,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.easyrules.core.RulesEngineBuilder.aNewRulesEngine;
@@ -32,19 +55,11 @@ public class CompositeRuleTest {
     @Before
     public void setup() throws Exception {
 
-        when(rule1.getName()).thenReturn("r1");
-        when(rule1.getDescription()).thenReturn("d1");
-        when(rule1.getPriority()).thenReturn(1);
         when(rule1.evaluate()).thenReturn(true);
-        when(rule1.compareTo(rule2)).thenCallRealMethod();
-
-        when(rule2.getName()).thenReturn("r2");
-        when(rule2.getDescription()).thenReturn("d2");
-        when(rule1.getPriority()).thenReturn(2);
         when(rule2.evaluate()).thenReturn(true);
-        when(rule2.compareTo(rule1)).thenCallRealMethod();
+        when(rule2.compareTo(rule1)).thenReturn(1);
 
-        compositeRule = new CompositeRule("cr");
+        compositeRule = new CompositeRule();
 
         rulesEngine = aNewRulesEngine().build();
     }
@@ -118,6 +133,7 @@ public class CompositeRuleTest {
     @Test
     public void testCompositeRuleWithAnnotatedComposingRules() throws Exception {
         MyRule rule = new MyRule();
+        compositeRule = new CompositeRule("myCompositeRule");
         compositeRule.addRule(rule);
 
         rulesEngine.registerRule(compositeRule);
@@ -130,6 +146,7 @@ public class CompositeRuleTest {
     public void whenAnnotatedRuleIsRemoved_thenItsProxyShouldBeRetrieved() throws Exception {
         MyRule rule = new MyRule();
         MyAnnotatedRule annotatedRule = new MyAnnotatedRule();
+        compositeRule = new CompositeRule("myCompositeRule", "composite rule with mixed types of rules");
         compositeRule.addRule(rule);
         compositeRule.addRule(annotatedRule);
         compositeRule.removeRule(annotatedRule);

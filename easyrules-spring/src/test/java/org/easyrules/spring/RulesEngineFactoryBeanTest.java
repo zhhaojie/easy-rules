@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.spring;
 
 import org.easyrules.api.RuleListener;
@@ -32,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -64,6 +63,8 @@ public class RulesEngineFactoryBeanTest {
 
     private boolean skipOnFirstAppliedRule;
 
+    private boolean skipOnFirstNonTriggeredRule;
+
     private boolean skipOnFirstFailedRule;
 
     private boolean silentMode;
@@ -74,8 +75,9 @@ public class RulesEngineFactoryBeanTest {
     public void setUp() {
         name = NAME;
         silentMode = true;
-        skipOnFirstFailedRule = true;
         skipOnFirstAppliedRule = true;
+        skipOnFirstNonTriggeredRule = true;
+        skipOnFirstFailedRule = true;
         priorityThreshold = RULE_PRIORITY_THRESHOLD;
         rulesEngineFactoryBean = new RulesEngineFactoryBean();
     }
@@ -90,6 +92,7 @@ public class RulesEngineFactoryBeanTest {
         rulesEngineFactoryBean.setRuleListeners(expectedRuleListeners);
         rulesEngineFactoryBean.setPriorityThreshold(priorityThreshold);
         rulesEngineFactoryBean.setSkipOnFirstAppliedRule(skipOnFirstAppliedRule);
+        rulesEngineFactoryBean.setSkipOnFirstNonTriggeredRule(skipOnFirstNonTriggeredRule);
         rulesEngineFactoryBean.setSkipOnFirstFailedRule(skipOnFirstFailedRule);
         rulesEngineFactoryBean.setSilentMode(silentMode);
         rulesEngineFactoryBean.setName(name);
@@ -101,6 +104,7 @@ public class RulesEngineFactoryBeanTest {
         assertThat(rulesEngineParameters.getName()).isEqualTo(NAME);
         assertThat(rulesEngineParameters.getPriorityThreshold()).isEqualTo(RULE_PRIORITY_THRESHOLD);
         assertThat(rulesEngineParameters.isSkipOnFirstAppliedRule()).isTrue();
+        assertThat(rulesEngineParameters.isSkipOnFirstNonTriggeredRule()).isTrue();
         assertThat(rulesEngineParameters.isSkipOnFirstFailedRule()).isTrue();
         assertThat(rulesEngine.getRules()).isEqualTo(new HashSet<>(expectedRules));
         assertThat(rulesEngine.getRuleListeners()).isEqualTo(expectedRuleListeners);

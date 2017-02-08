@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,6 @@ import org.springframework.beans.factory.FactoryBean;
 import java.util.List;
 
 import static org.easyrules.core.RulesEngineBuilder.aNewRulesEngine;
-import static org.easyrules.util.Utils.DEFAULT_ENGINE_NAME;
-import static org.easyrules.util.Utils.DEFAULT_RULE_PRIORITY_THRESHOLD;
 
 /**
  * Factory bean to create {@link RulesEngine} instances.
@@ -41,12 +39,14 @@ import static org.easyrules.util.Utils.DEFAULT_RULE_PRIORITY_THRESHOLD;
  */
 public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
 
-    private String name = DEFAULT_ENGINE_NAME;
+    private String name = RulesEngine.DEFAULT_NAME;
 
-    private int priorityThreshold = DEFAULT_RULE_PRIORITY_THRESHOLD;
+    private int priorityThreshold = RulesEngine.DEFAULT_RULE_PRIORITY_THRESHOLD;
     
     private boolean skipOnFirstAppliedRule;
-    
+
+    private boolean skipOnFirstNonTriggeredRule;
+
     private boolean skipOnFirstFailedRule;
     
     private boolean silentMode;
@@ -60,6 +60,7 @@ public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
         RulesEngineBuilder rulesEngineBuilder = aNewRulesEngine()
                 .named(name)
                 .withSkipOnFirstAppliedRule(skipOnFirstAppliedRule)
+                .withSkipOnFirstNonTriggeredRule(skipOnFirstNonTriggeredRule)
                 .withSkipOnFirstFailedRule(skipOnFirstFailedRule)
                 .withRulePriorityThreshold(priorityThreshold)
                 .withSilentMode(silentMode);
@@ -117,6 +118,10 @@ public class RulesEngineFactoryBean implements FactoryBean<RulesEngine> {
 
     public void setSkipOnFirstAppliedRule(boolean skipOnFirstAppliedRule) {
         this.skipOnFirstAppliedRule = skipOnFirstAppliedRule;
+    }
+
+    public void setSkipOnFirstNonTriggeredRule(boolean skipOnFirstNonTriggeredRule) {
+        this.skipOnFirstNonTriggeredRule = skipOnFirstNonTriggeredRule;
     }
 
     public void setSkipOnFirstFailedRule(boolean skipOnFirstFailedRule) {

@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.api;
 
 import java.util.List;
@@ -35,6 +34,16 @@ import org.easyrules.core.RulesEngineParameters;
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
 public interface RulesEngine {
+
+    /**
+     * Default engine name.
+     */
+    String DEFAULT_NAME = "engine";
+
+    /**
+     * Default rule priority threshold.
+     */
+    int DEFAULT_RULE_PRIORITY_THRESHOLD = Integer.MAX_VALUE;
 
     /**
      * Return the rules engine parameters.

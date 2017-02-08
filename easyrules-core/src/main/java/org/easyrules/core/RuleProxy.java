@@ -1,10 +1,32 @@
+/**
+ * The MIT License
+ *
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
 package org.easyrules.core;
 
 import org.easyrules.annotation.Action;
 import org.easyrules.annotation.Condition;
 import org.easyrules.annotation.Priority;
 import org.easyrules.annotation.Rule;
-import org.easyrules.util.Utils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -100,7 +122,7 @@ class RuleProxy implements InvocationHandler {
     }
 
     private int getRulePriority() throws Exception {
-        int priority = Utils.DEFAULT_RULE_PRIORITY;
+        int priority = org.easyrules.api.Rule.DEFAULT_PRIORITY;
 
         Method[] methods = getMethods();
         for (Method method : methods) {
@@ -155,7 +177,7 @@ class RuleProxy implements InvocationHandler {
 
     private String getRuleName() {
         Rule rule = getRuleAnnotation();
-        return rule.name().equals(Utils.DEFAULT_RULE_NAME) ? getTargetClass().getSimpleName() : rule.name();
+        return rule.name().equals(org.easyrules.api.Rule.DEFAULT_NAME) ? getTargetClass().getSimpleName() : rule.name();
     }
 
     private String getRuleDescription() {
@@ -165,7 +187,7 @@ class RuleProxy implements InvocationHandler {
         appendActionMethodsNames(description);
 
         Rule rule = getRuleAnnotation();
-        return rule.description().equals(Utils.DEFAULT_RULE_DESCRIPTION) ? description.toString() : rule.description();
+        return rule.description().equals(org.easyrules.api.Rule.DEFAULT_DESCRIPTION) ? description.toString() : rule.description();
     }
 
     private void appendConditionMethodName(StringBuilder description) {

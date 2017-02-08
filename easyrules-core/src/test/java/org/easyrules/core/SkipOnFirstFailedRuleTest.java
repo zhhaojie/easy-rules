@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2014, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.core;
 
 import org.easyrules.api.RulesEngine;
@@ -29,7 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.*;
 
@@ -77,7 +76,6 @@ public class SkipOnFirstFailedRuleTest {
         when(rule1.getName()).thenReturn("r1");
         when(rule1.getPriority()).thenReturn(1);
         when(rule1.evaluate()).thenReturn(true);
-        when(rule1.compareTo(rule2)).thenReturn(-1);
         final Exception exception = new Exception("fatal error!");
         doThrow(exception).when(rule1).execute();
     }
@@ -85,7 +83,6 @@ public class SkipOnFirstFailedRuleTest {
     private void setUpRule2() {
         when(rule2.getName()).thenReturn("r2");
         when(rule2.getPriority()).thenReturn(2);
-        when(rule2.evaluate()).thenReturn(true);
         when(rule2.compareTo(rule1)).thenReturn(1);
     }
 

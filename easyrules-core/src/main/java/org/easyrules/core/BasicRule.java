@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,15 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.core;
 
 import org.easyrules.api.Rule;
-import org.easyrules.util.Utils;
 
 /**
  * Basic rule implementation class that provides common methods.
  *
- * You can extend this class and override {@link BasicRule#evaluate()} and {@link BasicRule#execute()}
- * to provide rule conditions and actions logic.
+ * You can extend this class and override {@link BasicRule#evaluate()} and {@link BasicRule#execute()} to provide rule
+ * conditions and actions logic.
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
@@ -52,18 +50,39 @@ public class BasicRule implements Rule, Comparable<Rule> {
      */
     protected int priority;
 
+    /**
+     * Create a new {@link BasicRule}.
+     */
     public BasicRule() {
-        this(Utils.DEFAULT_RULE_NAME, Utils.DEFAULT_RULE_DESCRIPTION, Utils.DEFAULT_RULE_PRIORITY);
+        this(Rule.DEFAULT_NAME, Rule.DEFAULT_DESCRIPTION, Rule.DEFAULT_PRIORITY);
     }
 
+    /**
+     * Create a new {@link BasicRule}.
+     *
+     * @param name rule name
+     */
     public BasicRule(final String name) {
-        this(name, Utils.DEFAULT_RULE_DESCRIPTION, Utils.DEFAULT_RULE_PRIORITY);
+        this(name, Rule.DEFAULT_DESCRIPTION, Rule.DEFAULT_PRIORITY);
     }
 
+    /**
+     * Create a new {@link BasicRule}.
+     *
+     * @param name rule name
+     * @param description rule description
+     */
     public BasicRule(final String name, final String description) {
-        this(name, description, Utils.DEFAULT_RULE_PRIORITY);
+        this(name, description, Rule.DEFAULT_PRIORITY);
     }
 
+    /**
+     * Create a new {@link BasicRule}.
+     *
+     * @param name rule name
+     * @param description rule description
+     * @param priority rule priority
+     */
     public BasicRule(final String name, final String description, final int priority) {
         this.name = name;
         this.description = description;
@@ -81,7 +100,7 @@ public class BasicRule implements Rule, Comparable<Rule> {
      * {@inheritDoc}
      */
     public void execute() throws Exception {
-        //no op
+        // no op
     }
 
     public String getName() {
@@ -110,13 +129,17 @@ public class BasicRule implements Rule, Comparable<Rule> {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         BasicRule basicRule = (BasicRule) o;
 
-        if (priority != basicRule.priority) return false;
-        if (!name.equals(basicRule.name)) return false;
+        if (priority != basicRule.priority)
+            return false;
+        if (!name.equals(basicRule.name))
+            return false;
         return !(description != null ? !description.equals(basicRule.description) : basicRule.description != null);
 
     }
@@ -136,12 +159,12 @@ public class BasicRule implements Rule, Comparable<Rule> {
 
     @Override
     public int compareTo(final Rule rule) {
-        if (priority < rule.getPriority()) {
+        if (getPriority() < rule.getPriority()) {
             return -1;
-        } else if (priority > rule.getPriority()) {
+        } else if (getPriority() > rule.getPriority()) {
             return 1;
         } else {
-            return name.compareTo(rule.getName());
+            return getName().compareTo(rule.getName());
         }
     }
 

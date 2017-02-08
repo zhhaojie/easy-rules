@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.annotation;
-
-import org.easyrules.util.Utils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -44,12 +41,12 @@ public @interface Rule {
      * The rule name which must be unique within an rules registry.
      * @return The rule name
      */
-    String name() default Utils.DEFAULT_RULE_NAME;
+    String name() default org.easyrules.api.Rule.DEFAULT_NAME;
 
     /**
      * The rule description.
      * @return The rule description
      */
-    String description() default  Utils.DEFAULT_RULE_DESCRIPTION;
+    String description() default  org.easyrules.api.Rule.DEFAULT_DESCRIPTION;
 
 }

@@ -1,7 +1,7 @@
-/*
+/**
  * The MIT License
  *
- *  Copyright (c) 2016, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
+ *  Copyright (c) 2017, Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,9 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.easyrules.core;
 
 import org.easyrules.api.Rule;
-import org.easyrules.util.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,18 +49,39 @@ public class CompositeRule extends BasicRule {
 
     protected Map<Object, Rule> proxyRules;
 
+    /**
+     * Create a new {@link CompositeRule}.
+     */
     public CompositeRule() {
-        this(Utils.DEFAULT_RULE_NAME, Utils.DEFAULT_RULE_DESCRIPTION, Utils.DEFAULT_RULE_PRIORITY);
+        this(Rule.DEFAULT_NAME, Rule.DEFAULT_DESCRIPTION, Rule.DEFAULT_PRIORITY);
     }
 
+    /**
+     * Create a new {@link CompositeRule}.
+     *
+     * @param name rule name
+     */
     public CompositeRule(final String name) {
-        this(name, Utils.DEFAULT_RULE_DESCRIPTION, Utils.DEFAULT_RULE_PRIORITY);
+        this(name, Rule.DEFAULT_DESCRIPTION, Rule.DEFAULT_PRIORITY);
     }
 
+    /**
+     * Create a new {@link CompositeRule}.
+     *
+     * @param name rule name
+     * @param description rule description
+     */
     public CompositeRule(final String name, final String description) {
-        this(name, description, Utils.DEFAULT_RULE_PRIORITY);
+        this(name, description, Rule.DEFAULT_PRIORITY);
     }
 
+    /**
+     * Create a new {@link CompositeRule}.
+     *
+     * @param name rule name
+     * @param description rule description
+     * @param priority rule priority
+     */
     public CompositeRule(final String name, final String description, final int priority) {
         super(name, description, priority);
         rules = new TreeSet<>();
