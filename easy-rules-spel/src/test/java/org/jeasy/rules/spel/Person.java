@@ -61,4 +61,17 @@ public class Person {
     public static void sayHello() {
         System.out.println("hello");
     }
+
+    public void sayHelloTo(String who) {
+        System.out.println("hello," + who + "!");
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", isAdult=" + isAdult +
+                '}';
+    }
 }
